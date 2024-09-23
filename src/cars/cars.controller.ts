@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   ParseUUIDPipe,
   Patch,
   Post,
@@ -12,6 +11,7 @@ import {
 import { CarsService } from './cars.service';
 import { UUID } from 'crypto';
 import { CreateCarDto } from './dto/create-car.dto';
+import { UpdateCarDto } from './dto/update-car-dto';
 
 // @UsePipes(ValidationPipe) //Controller validation
 @Controller('cars')
@@ -38,27 +38,19 @@ export class CarsController {
       '🚀 ~ CarsController ~ createCart ~ createCarDto:',
       createCarDto,
     );
-    return {
-      method: 'POST',
-      message: 'Ok',
-    };
+    return this.carsService.create(createCarDto);
   }
 
   @Patch(':id')
-  updateCar(@Body() body: any) {
-    console.log('🚀 ~ CarsController ~ createCart ~ body:', body);
-    return {
-      method: 'Patch',
-      message: 'Ok',
-    };
+  updateCar(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateCarDto: UpdateCarDto,
+  ) {
+    return this.carsService.update(id, updateCarDto);
   }
 
   @Delete(':id')
-  deleteCar(@Param('id', ParseIntPipe) id) {
-    console.log('🚀 ~ CarsController ~ createCart ~ body:', id);
-    return {
-      method: 'Delete',
-      message: 'Ok',
-    };
+  deleteCar(@Param('id', ParseUUIDPipe) id) {
+    return this.carsService.delete(id);
   }
 }
